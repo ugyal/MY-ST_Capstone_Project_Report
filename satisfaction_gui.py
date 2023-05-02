@@ -1,11 +1,21 @@
+import pandas as pd
 import tkinter as tk
-from satisfaction_model import *
+
+import pandas as pd
+import sklearn
+# Load libraries
+from sklearn import preprocessing
+from sklearn.ensemble import RandomForestClassifier
+
+# from satisfaction_model import *
 # Read the test data from CSV
-test_data = pd.read_csv('mnist_test.csv')
+test_data = pd.read_csv('train.csv')
 
 # Create the GUI
-class SatisfactionPredictorGUI:
-    def __init__(self, master):
+class SatisfactionPredictorGUI(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        master = self
         self.master = master
         master.title("Satisfaction Predictor")
 
@@ -30,6 +40,7 @@ class SatisfactionPredictorGUI:
         tk.Label(master, text="Departure Delay in Minutes:").grid(row=17, column=0)
         tk.Label(master, text="Arrival Delay in Minutes:").grid(row=18, column=0)
 
+        # age, Gender, class_, inflight_entertainment, departure_arrival_time_convenient, ease_of_online_booking, gate_location, food_and_drink, online_boarding, seat_comfort, inflight_entertainment, onboard_service, leg_room_service, baggage_handling, checkin_service, inflight_service, cleanliness, departure_delay, arrival_delay
         self.age_entry = tk.Entry(master)
         self.gender_entry = tk.Entry(master)
         self.class_entry = tk.Entry(master)
@@ -69,21 +80,142 @@ class SatisfactionPredictorGUI:
         self.departure_delay_entry.grid(row=17, column=1)
         self.arrival_delay_entry.grid(row=18, column=1)
 
+        self.age_entry.insert(0, '18')
+        self.gender_entry.insert(0, '1')
+        self.class_entry.insert(0, '1')
+        self.inflight_wifi_entry.insert(0, '4')
+        self.departure_arrival_entry.insert(0, '3')
+        self.ease_of_booking_entry.insert(0, '3')
+        self.gate_location_entry.insert(0, '2')
+        self.food_drink_entry.insert(0, '4')
+        self.online_boarding_entry.insert(0, '3')
+        self.seat_comfort_entry.insert(0, '3')
+        self.inflight_entertainment_entry.insert(0, '4')
+        self.onboard_service_entry.insert(0, '4')
+        self.legroom_service_entry.insert(0, '5')
+        self.baggage_handling_entry.insert(0, '2')
+        self.checkin_service_entry.insert(0, '1')
+        self.inflight_service_entry.insert(0, '3')
+        self.cleanliness_entry.insert(0, '4')
+        self.departure_delay_entry.insert(0, '0')
+        self.arrival_delay_entry.insert(0, '0')
+        # 18, 1, 1, 4, 3, 3, 2, 4, 3, 3, 4, 4, 5, 2, 1, 3, 4, 0, 0)
+
         # Create the predict button
 
         self.predict_button = tk.Button(master, text="Predict", command=self.predict_satisfaction)
         self.predict_button.grid(row=19, column=0, columnspan=2, pady=10)
 
         # Create the output field
-        self.output_label = tk.Label(master, text="")
+        self.output_label = tk.Label(master, text="output prediction")
         self.output_label.grid(row=20, column=0, columnspan=2)
+
+        # --------------------------
+        Airline_satisfaction_data = pd.read_csv("train.csv")
+
+        # Attribute to be predicted
+        predict = "Airline_satisfaction_data"
+
+        # Dataset/Column to be Predicted, X is all attributes and y is the features
+        #x = np.array(heart_data.drop([predict], 1)) # Will return a new data frame that doesnt have hd in it
+        #y = np.array(heart_data[predict])
+        l = preprocessing.LabelEncoder()
+        age = l.fit_transform(list(Airline_satisfaction_data["Age"]))#AGE OF THE PASSENGER
+        Gender = l.fit_transform(list(Airline_satisfaction_data["Gender"]))
+        id = l.fit_transform(list(Airline_satisfaction_data["id"]))
+        customer_type = l.fit_transform(list(Airline_satisfaction_data["Customer Type"]))
+        type_of_travel = l.fit_transform(list(Airline_satisfaction_data["Type of Travel"]))
+        class_ = l.fit_transform(list(Airline_satisfaction_data["Class"]))
+        flight_distance = l.fit_transform(list(Airline_satisfaction_data["Flight Distance"]))
+        inflight_wifi_service = l.fit_transform(list(Airline_satisfaction_data["Inflight wifi service"]))
+        departure_arrival_time_convenient = l.fit_transform(list(Airline_satisfaction_data["Departure/Arrival time convenient"]))
+        ease_of_online_booking = l.fit_transform(list(Airline_satisfaction_data["Ease of Online booking"]))
+        gate_location = l.fit_transform(list(Airline_satisfaction_data["Gate location"]))
+        food_and_drink = l.fit_transform(list(Airline_satisfaction_data["Food and drink"]))
+        online_boarding = l.fit_transform(list(Airline_satisfaction_data["Online boarding"]))
+        seat_comfort = l.fit_transform(list(Airline_satisfaction_data["Seat comfort"]))
+        inflight_entertainment = l.fit_transform(list(Airline_satisfaction_data["Inflight entertainment"]))
+        onboard_service = l.fit_transform(list(Airline_satisfaction_data["On-board service"]))
+        leg_room_service = l.fit_transform(list(Airline_satisfaction_data["Leg room service"]))
+        baggage_handling = l.fit_transform(list(Airline_satisfaction_data["Baggage handling"]))
+        checkin_service = l.fit_transform(list(Airline_satisfaction_data["Checkin service"]))
+        inflight_service = l.fit_transform(list(Airline_satisfaction_data["Inflight service"]))
+        cleanliness = l.fit_transform(list(Airline_satisfaction_data["Cleanliness"]))
+        departure_delay = l.fit_transform(list(Airline_satisfaction_data["Departure Delay in Minutes"]))
+        arrival_delay = l.fit_transform(list(Airline_satisfaction_data["Arrival Delay in Minutes"]))
+        satisfaction = l.fit_transform(list(Airline_satisfaction_data["satisfaction"]))
+
+        x = list(zip(age, Gender, class_, inflight_entertainment, departure_arrival_time_convenient, ease_of_online_booking, gate_location, food_and_drink, online_boarding, seat_comfort, inflight_entertainment, onboard_service, leg_room_service, baggage_handling, checkin_service, inflight_service, cleanliness, departure_delay, arrival_delay))
+        y = list(satisfaction)
+
+        # Test options and evaluation metric
+        num_folds = 5
+        seed = 7
+        scoring = 'accuracy'
+
+        # Model Test/Train
+        # Splitting what we are trying to predict into 4 different arrays -
+        # X train is a section of the x array(attributes) and vise versa for Y(features)
+        # The test data will test the accuracy of the model created
+        # self.x_train, self.x_test, self.y_train, self.y_test = sklearn.model_selection.train_test_split(x, y, test_size = 0.20, random_state=seed)
+        x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(x, y, test_size = 0.20, random_state=seed)
+        self.model = RandomForestClassifier()
+        self.model.fit(x_train, y_train)
+
+
+
+        # -----------------------------
 
 
     # Define the function to predict the satisfaction
     def predict_satisfaction(self):
-        # Get the input values from the GUI
+        # # Get the input values from the GUI
+        # age = l.fit_transform(list(Airline_satisfaction_data["Age"]))#AGE OF THE PASSENGER
+        # Gender = l.fit_transform(list(Airline_satisfaction_data["Gender"]))
+        # id = l.fit_transform(list(Airline_satisfaction_data["id"]))
+        # customer_type = l.fit_transform(list(Airline_satisfaction_data["Customer Type"]))
+        # type_of_travel = l.fit_transform(list(Airline_satisfaction_data["Type of Travel"]))
+        # class_ = l.fit_transform(list(Airline_satisfaction_data["Class"]))
+        # flight_distance = l.fit_transform(list(Airline_satisfaction_data["Flight Distance"]))
+        # inflight_wifi_service = l.fit_transform(list(Airline_satisfaction_data["Inflight wifi service"]))
+        # departure_arrival_time_convenient = l.fit_transform(list(Airline_satisfaction_data["Departure/Arrival time convenient"]))
+        # ease_of_online_booking = l.fit_transform(list(Airline_satisfaction_data["Ease of Online booking"]))
+        # gate_location = l.fit_transform(list(Airline_satisfaction_data["Gate location"]))
+        # food_and_drink = l.fit_transform(list(Airline_satisfaction_data["Food and drink"]))
+        # online_boarding = l.fit_transform(list(Airline_satisfaction_data["Online boarding"]))
+        # seat_comfort = l.fit_transform(list(Airline_satisfaction_data["Seat comfort"]))
+        # inflight_entertainment = l.fit_transform(list(Airline_satisfaction_data["Inflight entertainment"]))
+        # onboard_service = l.fit_transform(list(Airline_satisfaction_data["On-board service"]))
+        # leg_room_service = l.fit_transform(list(Airline_satisfaction_data["Leg room service"]))
+        # baggage_handling = l.fit_transform(list(Airline_satisfaction_data["Baggage handling"]))
+        # checkin_service = l.fit_transform(list(Airline_satisfaction_data["Checkin service"]))
+        # inflight_service = l.fit_transform(list(Airline_satisfaction_data["Inflight service"]))
+        # cleanliness = l.fit_transform(list(Airline_satisfaction_data["Cleanliness"]))
+        # departure_delay = l.fit_transform(list(Airline_satisfaction_data["Departure Delay in Minutes"]))
+        # arrival_delay = l.fit_transform(list(Airline_satisfaction_data["Arrival Delay in Minutes"]))
+        # satisfaction = l.fit_transform(list(Airline_satisfaction_data["satisfaction"]))
+# --------
+        # age = int(self.age_entry.get())
+        # Gender = int(self.gender_entry.get())
+        # class_ = int(self.class_entry.get())
+        # inflight_wifi_service = int(self.inflight_wifi_entry.get())
+        # departure_arrival_time_convenient = int(self.departure_arrival_entry.get())
+        # ease_of_online_booking = int(self.ease_of_booking_entry.get())
+        # gate_location = int(self.gate_location_entry.get())
+        # food_and_drink = int(self.food_drink_entry.get())
+        # online_boarding = int(self.online_boarding_entry.get())
+        # seat_comfort = int(self.seat_comfort_entry.get())
+        # inflight_entertainment = int(self.inflight_entertainment_entry.get())
+        # onboard_service = int(self.onboard_service_entry.get())
+        # legroom_service = int(self.legroom_service_entry.get())
+        # baggage_handling = int(self.baggage_handling_entry.get())
+        # checkin_service = int(self.checkin_service_entry.get())
+        # inflight_service = int(self.inflight_service_entry.get())
+        # cleanliness = int(self.cleanliness_entry.get())
+        # departure_delay = int(self.departure_delay_entry.get())
+        # arrival_delay = int(self.arrival_delay_entry.get())
         age = int(self.age_entry.get())
-        gender = int(self.gender_entry.get())
+        Gender = int(self.gender_entry.get())
         class_ = int(self.class_entry.get())
         inflight_wifi_service = int(self.inflight_wifi_entry.get())
         departure_arrival_time_convenient = int(self.departure_arrival_entry.get())
@@ -91,22 +223,33 @@ class SatisfactionPredictorGUI:
         gate_location = int(self.gate_location_entry.get())
         food_and_drink = int(self.food_drink_entry.get())
         online_boarding = int(self.online_boarding_entry.get())
-        seat_comfort = int(self.seat_comfort_entry.get())
-        inflight_entertainment = int(self.inflight_entertainment_entry.get())
+        seat_comfort = int(self.age_entry.get())
+        inflight_entertainment = int(self.age_entry.get())
         onboard_service = int(self.onboard_service_entry.get())
-        legroom_service = int(self.legroom_service_entry.get())
+        leg_room_service = int(self.legroom_service_entry.get())
         baggage_handling = int(self.baggage_handling_entry.get())
         checkin_service = int(self.checkin_service_entry.get())
         inflight_service = int(self.inflight_service_entry.get())
         cleanliness = int(self.cleanliness_entry.get())
-        departure_delay = int(self.departure_delay_entry.get())
+        departure_delay  = int(self.departure_delay_entry.get())
         arrival_delay = int(self.arrival_delay_entry.get())
 
                 # Create the input array for prediction
-        input_arr = [[age, gender, class_, inflight_wifi_service, departure_arrival_time_convenient,
-                    ease_of_online_booking, food_and_beverages, gate_location, inflight_entertainment,
-                    onboard_service, leg_room_service, baggage_handling, checkin_service, inflight_service,
-                    cleanliness, departure_delay_in_minutes, arrival_delay_in_minutes]]
-        predicted_satisfaction = predict_satisfaction(input_arr)
-        self.output_label.config(text=f"Predicted satisfaction: {predicted_satisfaction[0]}")
+                # zip(age, Gender, class_, inflight_entertainment, departure_arrival_time_convenient, ease_of_online_booking, gate_location, food_and_drink, online_boarding, seat_comfort, inflight_entertainment, onboard_service, leg_room_service, baggage_handling, checkin_service, inflight_service, cleanliness, departure_delay, arrival_delay)
+        # input_arr = [(age, Gender, class_, inflight_entertainment, departure_arrival_time_convenient, ease_of_online_booking, gate_location, food_and_drink, online_boarding, seat_comfort, inflight_entertainment, onboard_service, leg_room_service, baggage_handling, checkin_service, inflight_service, cleanliness, departure_delay, arrival_delay)]
+        input_arr = [(age, Gender, class_, inflight_wifi_service, departure_arrival_time_convenient, ease_of_online_booking,  gate_location, food_and_drink, online_boarding, seat_comfort, inflight_entertainment, onboard_service, leg_room_service, baggage_handling, checkin_service, inflight_service, cleanliness, departure_delay, arrival_delay)]
+        print('predicting')
+        predicted_satisfaction_value = self.model.predict_proba(input_arr)
+        print(predicted_satisfaction_value)
+        print('prediction over')
+        _str = f"Predicted satisfaction: {str(100   - predicted_satisfaction_value[0][0] * 100)}%"
+        print(_str)
+        self.output_label.config(text=_str)
+        print('label updated')
+        self.update_idletasks()
 
+
+
+
+gui = SatisfactionPredictorGUI()
+gui.mainloop()
