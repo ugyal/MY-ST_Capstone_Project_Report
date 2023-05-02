@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/main.css')}}">
+    <!---<meta http-equiv="X-UA-Compatible" content="ie=edge" />-->
+    <title>HD Prediction</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='styles/parallax.min.js')}}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" />
+
+
+
+</head>
+<!--
+<nav>
+  <ul>
+  <li><a href="#home">Home</a></li>
+  <li style="float:right"><a class="active" href="#about">About</a></li>
+</ul>
+</nav>
+-->
+<div class="parallax-window" data-parallax="scroll" data-image-src="{{url_for('static', filename='images/airplane-2.jpg')}}">
+
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li style="float:right"><a class="active" href="about">About</a></li>
+    </ul>
+</div>
+
+<style>
+
+
+    .parallax-window {
+        min-height: 500px;
+        background: transparent;
+    }
+</style>
+<!--  <div class="containerforh">
+    <br>
+    <div class="quotemain">"Prevention is better Than Cure"</div>
+-->
+</div>
+
+
+<body>
+
+    <div class="explaination">
+        <h2 class="abouth3"> About This Platform</h2>
+        <p class="info">
+            This platform is designed to predict Passenger Satisfaction. The data
+            being used to aid the algorithm has been taken from the<a class="colorhisa"
+                                                                      href="https://www.kaggle.com/datasets/teejmahal20/airline-passenger-satisfaction?resource=download">Kaggle Airline Passenger Satisfaction</a> data set. The intended
+            audience for this application are airlines who understand the input values and
+            have the provided data from passengers. For more information
+            on the data attributes associated with our calculation, <a class="colorthisa"
+                                                                       href="https://towardsdatascience.com/predicting-satisfaction-of-airline-passengers-with-classification-76f1516e1d16">Click Here.</a>
+        </p>
+    </div>
+
+
+    <h3>Airline Satisfaction Prediction Platform</h3>
+
+
+    <!-- Form -->
+    <div class="complete_form">
+        <form action="/send" method="POST">
+
+            <div class="container1">
+                <label for="age_entry">Age:</label>
+                <input type="number" required
+                       placeholder="Enter Your Age..."
+                       name="age_entry" />
+                <label for="gender_entry">Gender: </label>
+                <select name="gender_entry" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+                <label for="class_entry">Class:</label>
+                <select name="class_entry" required>
+                    <option value="0">Eco</option>
+                    <option value="2">Eco Plus</option>
+                    <option value="1">Business</option>
+                </select>
+
+                <label for="inflight_wifi_entry">Inflight wifi service:</label>
+                <select name="inflight_wifi_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <label for="departure_arrival_entry">Departure/Arrival time convenient:</label>
+                <select name="departure_arrival_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <label for="ease_of_booking_entry">Ease of Online booking:</label>
+                <select name="ease_of_booking_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <label for="gate_location_entry">Gate location:</label>
+                <select name="gate_location_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+
+
+
+
+
+
+
+
+
+                <label for="food_drink_entry">Food and drink:</label>
+                <select name="food_drink_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <label for="online_boarding_entry">Online boarding:</label>
+                <select name="online_boarding_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <label for="seat_comfort_entry">Seat comfort:</label>
+                <select name="seat_comfort_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+
+
+
+
+            </div>
+
+            <div class="container2">
+                <label for="inflight_entertainment_entry">Inflight entertainment:</label>
+                <select name="inflight_entertainment_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <label for="onboard_service_entry">On-board service:</label>
+                <select name="onboard_service_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <label for="legroom_service_entry">Leg room service:</label>
+                <select name="legroom_service_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <label for="baggage_handling_entry">Baggage handling:</label>
+                <select name="baggage_handling_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <label for="checkin_service_entry">Checkin service:</label>
+                <select name="checkin_service_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <label for="inflight_service_entry">Inflight service:</label>
+                <select name="inflight_service_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+
+
+
+                     
+                <label for="cleanliness_entry">Cleanliness:</label>
+                <select name="cleanliness_entry" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <label for="departure_delay_entry">Departure Delay in Minutes:</label>
+                <input type="number" required
+                       placeholder="Departure Delay in Minutes"
+                       name="departure_delay_entry" />
+                
+                <label for="arrival_delay_entry">Arrival Delay in Minutes:</label>
+                <input type="number" required
+                       placeholder="Arrival Delay in Minutes"
+                       name="arrival_delay_entry" />
+
+
+
+
+
+
+
+
+                <br />
+                <br />
+                <input type="submit" value="Predict" id="calc_btn" />
+                <br />
+            </div>
+            <div class="alert">
+                {{ predict }}
+            </div>
+        </form>
+    </div>
+
+
+
+
+</body>
+
+<footer>
+    <p>© 2023 - University of Canberra ST1_Capstone - Project. All Rights Reserved.
+</footer>
+</html>
